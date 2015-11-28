@@ -137,20 +137,19 @@ public class NearbyWords implements SpellingSuggest {
 		List<String> neighbors; // words to search through
 		String currentWord;
 		int wordCount = 0;
-		boolean realWordsOnly = true; // only return real words, for now
 
 		// insert first node
 		queue.add(word);
 		visited.add(word);
 					
 		// Implement the remainder of this method, see assignment for algorithm
-		while(!queue.isEmpty()) {
+		while(!queue.isEmpty() && wordCount < THRESHOLD) {
 			currentWord = queue.remove(0);
-			neighbors = distanceOne(currentWord, realWordsOnly);
+			neighbors = distanceOne(currentWord, true);
 
 			// loop through neighbors and add to lists if new
 			for(String neighbor : neighbors) {
-				if(wordCount < THRESHOLD && visited.contains(neighbor)) {
+				if(wordCount < THRESHOLD && !visited.contains(neighbor)) {
 					visited.add(neighbor);
 					queue.add(neighbor);
 					retList.add(neighbor);
@@ -170,9 +169,9 @@ public class NearbyWords implements SpellingSuggest {
 	   Dictionary d = new DictionaryHashSet();
 	   DictionaryLoader.loadDictionary(d, "data/dict.txt");
 	   NearbyWords w = new NearbyWords(d);
-	   List<String> l = w.distanceOne(word, true);
-	   System.out.println("One away word Strings for for \""+word+"\" are:");
-	   System.out.println(l+"\n");
+//	   List<String> l = w.distanceOne(word, true);
+//	   System.out.println("One away word Strings for for \""+word+"\" are:");
+//	   System.out.println(l+"\n");
 
 	   word = "tailo";
 	   List<String> suggest = w.suggestions(word, 10);
