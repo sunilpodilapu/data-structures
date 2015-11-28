@@ -33,7 +33,7 @@ public class NearbyWords implements SpellingSuggest {
 	 * @return list of Strings which are nearby the original string
 	 */
 	public List<String> distanceOne(String s, boolean wordsOnly )  {
-		   List<String> retList = new ArrayList<String>();
+		   List<String> retList = new ArrayList<>();
 		   insertions(s, retList, wordsOnly);
 		   subsitution(s, retList, wordsOnly);
 		   deletions(s, retList, wordsOnly);
@@ -46,7 +46,6 @@ public class NearbyWords implements SpellingSuggest {
 	 * @param s The original String
 	 * @param currentList is the list of words to append modified words 
 	 * @param wordsOnly controls whether to return only words or any String
-	 * @return
 	 */
 	public void subsitution(String s, List<String> currentList, boolean wordsOnly) {
 		// for each letter in the s and for all possible replacement characters
@@ -54,7 +53,8 @@ public class NearbyWords implements SpellingSuggest {
 			for(int charCode = (int)'a'; charCode <= (int)'z'; charCode++) {
 				// use StringBuffer for an easy interface to permuting the 
 				// letters in the String
-				StringBuffer sb = new StringBuffer(s);
+				//StringBuffer sb = new StringBuffer(s);  trying builder instead
+				StringBuilder sb = new StringBuilder(s);
 				sb.setCharAt(index, (char)charCode);
 
 				// if the item isn't in the list, isn't the original string, and
@@ -73,10 +73,14 @@ public class NearbyWords implements SpellingSuggest {
 	 * @param s The original String
 	 * @param currentList is the list of words to append modified words 
 	 * @param wordsOnly controls whether to return only words or any String
-	 * @return
 	 */
 	public void insertions(String s, List<String> currentList, boolean wordsOnly ) {
-		// TODO: Implement this method  
+		// Implement this method
+		for(int index = 0; index < s.length(); index++) {
+			for(int charCode = (int)'a'; charCode <= (int)'z'; charCode++) {
+
+			}
+		}
 	}
 
 	/** Add to the currentList Strings that are one character deletion away
@@ -84,7 +88,6 @@ public class NearbyWords implements SpellingSuggest {
 	 * @param s The original String
 	 * @param currentList is the list of words to append modified words 
 	 * @param wordsOnly controls whether to return only words or any String
-	 * @return
 	 */
 	public void deletions(String s, List<String> currentList, boolean wordsOnly ) {
 		// TODO: Implement this method
@@ -100,10 +103,10 @@ public class NearbyWords implements SpellingSuggest {
 	public List<String> suggestions(String word, int numSuggestions) {
 
 		// initial variables
-		List<String> queue = new LinkedList<String>();     // String to explore
-		HashSet<String> visited = new HashSet<String>();   // to avoid exploring the same  
+		List<String> queue = new LinkedList<>();     // String to explore
+		HashSet<String> visited = new HashSet<>();   // to avoid exploring the same
 														   // string multiple times
-		List<String> retList = new LinkedList<String>();   // words to return
+		List<String> retList = new LinkedList<>();   // words to return
 		 
 		
 		// insert first node

@@ -2,7 +2,7 @@
 Specialization that covers intermediate topics in software development using the Java programming language and various data structures.
 
 ## Usage
-The only usage is to showcase course material completion and utilization of the Java programming language.
+Showcase course material completion and utilization of the Java programming language.
 
 ## Included
 - Object Oriented Programming in Java - UCSDUnfoldingMaps (Applet)
