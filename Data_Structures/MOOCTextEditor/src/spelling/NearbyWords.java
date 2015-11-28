@@ -132,24 +132,40 @@ public class NearbyWords implements SpellingSuggest {
 
 		// initial variables
 		List<String> queue = new LinkedList<>();     // String to explore
-		HashSet<String> visited = new HashSet<>();   // to avoid exploring the same
-														   // string multiple times
+		HashSet<String> visited = new HashSet<>();   // avoids same string over
 		List<String> retList = new LinkedList<>();   // words to return
-		 
-		
+		List<String> neighbors; // words to search through
+		String currentWord;
+		int wordCount = 0;
+		boolean realWordsOnly = true; // only return real words, for now
+
 		// insert first node
 		queue.add(word);
 		visited.add(word);
 					
-		// TODO: Implement the remainder of this method, see assignment for algorithm
+		// Implement the remainder of this method, see assignment for algorithm
+		while(!queue.isEmpty()) {
+			currentWord = queue.remove(0);
+			neighbors = distanceOne(currentWord, realWordsOnly);
+
+			// loop through neighbors and add to lists if new
+			for(String neighbor : neighbors) {
+				if(wordCount < THRESHOLD && visited.contains(neighbor)) {
+					visited.add(neighbor);
+					queue.add(neighbor);
+					retList.add(neighbor);
+				}
+				wordCount++;
+			}
+		}
 		
 		return retList;
 
 	}	
 
    public static void main(String[] args) {
-	   /* basic testing code to get started
-	   String word = "i";
+	   // basic testing code to get started
+	   String word = "him";
 	   // Pass NearbyWords any Dictionary implementation you prefer
 	   Dictionary d = new DictionaryHashSet();
 	   DictionaryLoader.loadDictionary(d, "data/dict.txt");
@@ -162,7 +178,7 @@ public class NearbyWords implements SpellingSuggest {
 	   List<String> suggest = w.suggestions(word, 10);
 	   System.out.println("Spelling Suggestions for \""+word+"\" are:");
 	   System.out.println(suggest);
-	   */
+
    }
 
 }
