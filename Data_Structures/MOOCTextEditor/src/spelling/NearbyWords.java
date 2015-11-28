@@ -35,7 +35,7 @@ public class NearbyWords implements SpellingSuggest {
 	public List<String> distanceOne(String s, boolean wordsOnly )  {
 		   List<String> retList = new ArrayList<>();
 		   insertions(s, retList, wordsOnly);
-		   subsitution(s, retList, wordsOnly);
+		   substitution(s, retList, wordsOnly);
 		   deletions(s, retList, wordsOnly);
 		   return retList;
 	}
@@ -47,7 +47,7 @@ public class NearbyWords implements SpellingSuggest {
 	 * @param currentList is the list of words to append modified words 
 	 * @param wordsOnly controls whether to return only words or any String
 	 */
-	public void subsitution(String s, List<String> currentList, boolean wordsOnly) {
+	public void substitution(String s, List<String> currentList, boolean wordsOnly) {
 		// for each letter in the s and for all possible replacement characters
 		for(int index = 0; index < s.length(); index++){
 			for(int charCode = (int)'a'; charCode <= (int)'z'; charCode++) {
@@ -76,9 +76,21 @@ public class NearbyWords implements SpellingSuggest {
 	 */
 	public void insertions(String s, List<String> currentList, boolean wordsOnly ) {
 		// Implement this method
+		StringBuilder sb;
+		String newString;
+
 		for(int index = 0; index < s.length(); index++) {
 			for(int charCode = (int)'a'; charCode <= (int)'z'; charCode++) {
+				// insert the letter into the string
+				sb = new StringBuilder(s);
+				sb.insert(index, (char) charCode);
 
+				// test if isn't in list, and is a word
+				newString = sb.toString();
+				if(!currentList.contains(newString) &&
+						(!wordsOnly || dict.isWord(newString))) {
+					currentList.add(newString);
+				}
 			}
 		}
 	}
@@ -90,7 +102,23 @@ public class NearbyWords implements SpellingSuggest {
 	 * @param wordsOnly controls whether to return only words or any String
 	 */
 	public void deletions(String s, List<String> currentList, boolean wordsOnly ) {
-		// TODO: Implement this method
+		// Implement this method
+		StringBuilder sb;
+		String newString;
+
+		for(int index = 0; index < s.length(); index++) {
+			// remove each character one by one
+			sb = new StringBuilder(s);
+			sb.delete(index, index + 1);
+
+			// test if word is real, in list or current word
+			newString = sb.toString();
+			if(!currentList.contains(newString) &&
+					!s.equals(newString) &&
+					(!wordsOnly || dict.isWord(newString))) {
+				currentList.add(newString);
+			}
+		}
 	}
 
 	/** Add to the currentList Strings that are one character deletion away
