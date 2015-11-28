@@ -62,6 +62,7 @@ public class WPTreeGrader {
             feedback += "Your path was: " + printPath(path) + ".\n";
         } catch (Exception e) {
             out.println(e);
+            e.printStackTrace();
             out.close();
             return;
         }

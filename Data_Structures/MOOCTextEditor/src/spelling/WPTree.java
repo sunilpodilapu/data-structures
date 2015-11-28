@@ -20,16 +20,19 @@ public class WPTree implements WordPath {
 	// this is the root node of the WPTree
 	private WPTreeNode root;
 	// used to search for nearby Words
-	private NearbyWords nw; 
-	
-	// This constructor is used by the Text Editor Application
+	private NearbyWords nw;
+
+    private static final int THRESHOLD = 100000;
+
+
+    // This constructor is used by the Text Editor Application
 	// You'll need to create your own NearbyWords object here.
 	public WPTree () {
 		this.root = null;
-		// TODO initialize a NearbyWords object
-		// Dictionary d = new DictionaryHashSet();
-		// DictionaryLoader.loadDictionary(d, "data/dict.txt");
-		// this.nw = new NearbyWords(d);
+		// initialize a NearbyWords object
+		 Dictionary d = new DictionaryHashSet();
+		 DictionaryLoader.loadDictionary(d, "data/dict.txt");
+		 this.nw = new NearbyWords(d);
 	}
 	
 	//This constructor will be used by the grader code
@@ -41,8 +44,40 @@ public class WPTree implements WordPath {
 	// see method description in WordPath interface
 	public List<String> findPath(String word1, String word2) 
 	{
-	    // TODO: Implement this method.
-	    return new LinkedList<String>();
+	    // Implement this method.
+        List<WPTreeNode> queue = new LinkedList<>();
+        HashSet<String> visited = new HashSet<>();
+        WPTreeNode currentNode;
+        List<String> neighbors;
+
+        // insert first node
+        root = new WPTreeNode(word1, null);
+        queue.add(root);
+        visited.add(word1);
+
+        // build a path to the 2nd word...hopefully
+        while(!queue.isEmpty() && visited.size() < THRESHOLD) {
+            currentNode = queue.remove(0);
+            neighbors = nw.distanceOne(currentNode.getWord(), true);
+
+            // loop through one mutation neighbors
+            for(String neighbor : neighbors) {
+                // if they haven't been visited already
+                if(!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    WPTreeNode child = currentNode.addChild(neighbor);
+                    queue.add(child);
+
+                    // end loops, word found
+                    if(word2.equals(neighbor))
+                        return child.buildPathToRoot();
+                }
+
+            }
+        }
+
+        // no path exists
+	    return null;
 	}
 	
 	// Method to print a list of WPTreeNodes (useful for debugging)
