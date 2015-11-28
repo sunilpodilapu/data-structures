@@ -79,7 +79,7 @@ public class NearbyWords implements SpellingSuggest {
 		StringBuilder sb;
 		String newString;
 
-		for(int index = 0; index < s.length(); index++) {
+		for(int index = 0; index <= s.length(); index++) {
 			for(int charCode = (int)'a'; charCode <= (int)'z'; charCode++) {
 				// insert the letter into the string
 				sb = new StringBuilder(s);
@@ -132,7 +132,7 @@ public class NearbyWords implements SpellingSuggest {
 
 		// initial variables
 		List<String> queue = new LinkedList<>();     // String to explore
-		HashSet<String> visited = new HashSet<>();   // avoids same string over
+		HashSet<String> visited = new HashSet<>();   // avoids same string
 		List<String> retList = new LinkedList<>();   // words to return
 		List<String> neighbors; // words to search through
 		String currentWord;
@@ -143,15 +143,15 @@ public class NearbyWords implements SpellingSuggest {
 		queue.add(word);
 		visited.add(word);
 					
-		// Implement the remainder of this method, see assignment for algorithm
-		while(!queue.isEmpty() && wordCount < THRESHOLD &&
-				suggestionTotal < numSuggestions) {
+		// Implement the remainder of this method, assignment has algorithm
+		while(!queue.isEmpty() && wordCount < THRESHOLD) {
 			currentWord = queue.remove(0);
 			neighbors = distanceOne(currentWord, true);
 
 			// loop through neighbors and add to lists if new
 			for(String neighbor : neighbors) {
-				if(suggestionTotal < numSuggestions && !visited.contains(neighbor)) {
+				if(suggestionTotal < numSuggestions &&
+						!visited.contains(neighbor)) {
 					visited.add(neighbor);
 					queue.add(neighbor);
 					retList.add(neighbor);
@@ -167,7 +167,7 @@ public class NearbyWords implements SpellingSuggest {
 
    public static void main(String[] args) {
 	   // basic testing code to get started
-	   String word = "i";
+	   String word = "or";
 	   // Pass NearbyWords any Dictionary implementation you prefer
 	   Dictionary d = new DictionaryHashSet();
 	   DictionaryLoader.loadDictionary(d, "data/dict.txt");
