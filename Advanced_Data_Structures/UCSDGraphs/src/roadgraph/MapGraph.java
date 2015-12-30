@@ -8,6 +8,7 @@
 package roadgraph;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -23,16 +24,17 @@ import util.GraphLoader;
  *
  */
 public class MapGraph {
-	//TODO: Add your member variables here in WEEK 2
-	
+	//Add your member variables here in WEEK 2
+    private HashMap<> nodes;
 	
 	/** 
 	 * Create a new empty MapGraph 
 	 */
 	public MapGraph()
 	{
-		// TODO: Implement in this constructor in WEEK 2
-	}
+		//Implement in this constructor in WEEK 2
+        nodes = new HashMap<>();
+    }
 	
 	/**
 	 * Get the number of vertices (road intersections) in the graph
@@ -40,8 +42,8 @@ public class MapGraph {
 	 */
 	public int getNumVertices()
 	{
-		//TODO: Implement this method in WEEK 2
-		return 0;
+		// Implement this method in WEEK 2
+		return nodes.size();
 	}
 	
 	/**
@@ -76,7 +78,15 @@ public class MapGraph {
 	public boolean addVertex(GeographicPoint location)
 	{
 		// TODO: Implement this method in WEEK 2
-		return false;
+        boolean inserted;
+
+        if () {
+            inserted = true;
+        } else {
+            inserted = false;
+        }
+
+		return inserted;
 	}
 	
 	/**
