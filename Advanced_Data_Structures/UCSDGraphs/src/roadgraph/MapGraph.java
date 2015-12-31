@@ -25,7 +25,7 @@ import util.GraphLoader;
  */
 public class MapGraph {
 	//Add your member variables here in WEEK 2
-    private HashMap<> nodes;
+    private HashMap<GeographicPoint, MapNode> nodes;
 	
 	/** 
 	 * Create a new empty MapGraph 
@@ -33,7 +33,7 @@ public class MapGraph {
 	public MapGraph()
 	{
 		//Implement in this constructor in WEEK 2
-        nodes = new HashMap<>();
+        this.nodes = new HashMap<>();
     }
 	
 	/**
@@ -43,7 +43,7 @@ public class MapGraph {
 	public int getNumVertices()
 	{
 		// Implement this method in WEEK 2
-		return nodes.size();
+		return this.nodes.size();
 	}
 	
 	/**
@@ -52,8 +52,8 @@ public class MapGraph {
 	 */
 	public Set<GeographicPoint> getVertices()
 	{
-		//TODO: Implement this method in WEEK 2
-		return null;
+		//Implement this method in WEEK 2
+		return this.nodes.keySet();
 	}
 	
 	/**
@@ -77,16 +77,17 @@ public class MapGraph {
 	 */
 	public boolean addVertex(GeographicPoint location)
 	{
-		// TODO: Implement this method in WEEK 2
-        boolean inserted;
+		// Implement this method in WEEK 2
+        // try to insert otherwise return false
+        boolean inserted = false;
 
-        if () {
+        if (!nodes.containsKey(location)) {
+            MapNode node = new MapNode(location);
+            this.nodes.put(location, node);
             inserted = true;
-        } else {
-            inserted = false;
         }
 
-		return inserted;
+        return inserted;
 	}
 	
 	/**
@@ -104,10 +105,23 @@ public class MapGraph {
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 
-		//TODO: Implement this method in WEEK 2
-		
+		// Implement this method in WEEK 2
+        // check if nodes exist
+        MapNode fromNode = nodes.get(from);
+        MapNode toNode = nodes.get(to);
+        if (fromNode == null || toNode == null)
+            throw new IllegalArgumentException("Node did not exist yet");
+
+        // create new edge, validates params are good
+        MapEdge edge = new MapEdge(from, to, roadName, roadType, length);
+
+        // add edge to nodes, validate they have not been added yet
+        if (fromNode.containsEdge(edge)) {
+            throw new IllegalArgumentException("Edge already part of node");
+        } else {
+            fromNode.addEdge(edge);
+        }
 	}
-	
 
 	/** Find the path from start to goal using breadth first search
 	 * 
@@ -134,6 +148,11 @@ public class MapGraph {
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 2
+
+        // create a queue with starting node
+        // pull in edges from that node and add all nodes not visited
+        // visit each node in queue and add any new nodes until hit goal if do
+        // track visited nodes in set or list
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
