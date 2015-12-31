@@ -9,6 +9,7 @@ package roadgraph;
 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -62,8 +63,14 @@ public class MapGraph {
 	 */
 	public int getNumEdges()
 	{
-		//TODO: Implement this method in WEEK 2
-		return 0;
+		// Implement this method in WEEK 2
+		Set<MapEdge> edges = new HashSet<>();
+
+		for(MapNode node : nodes.values()) {
+			edges.addAll(node.getEdges());
+		}
+
+		return edges.size();
 	}
 
 	

@@ -2,6 +2,7 @@ package roadgraph;
 
 import geography.GeographicPoint;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -16,6 +17,7 @@ public class MapNode {
 
     public MapNode(GeographicPoint location) {
         this.location = location;
+        edges = new HashSet<>();
     }
 
     /**
