@@ -45,4 +45,12 @@ public class MapNode {
     public Set<MapEdge> getEdges() {
         return this.edges;
     }
+
+    /**
+     * Getter for this nodes location
+     * @return GeographicPoint
+     */
+    public GeographicPoint getLocation() {
+        return this.location;
+    }
 }

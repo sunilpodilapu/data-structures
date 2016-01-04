@@ -8,13 +8,11 @@
 package roadgraph;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 import geography.GeographicPoint;
+import gmapsfx.javascript.object.GoogleMap;
 import util.GraphLoader;
 
 /**
@@ -154,16 +152,44 @@ public class MapGraph {
 	public List<GeographicPoint> bfs(GeographicPoint start, 
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 2
+		// Implement this method in WEEK 2
 
-        // create a queue with starting node
-        // pull in edges from that node and add all nodes not visited
+        // create a queue with starting node and visited list
+		Queue<List> queue = new PriorityQueue<>();
+        Set<MapNode> visited = new HashSet<>();
+        List<GeographicPoint> path = new ArrayList<>();
+
+        // starting node put in queue path
+        path.add(start);
+		queue.add(path);
+
         // visit each node in queue and add any new nodes until hit goal if do
-        // track visited nodes in set or list
-		
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
+        while (!queue.isEmpty()) {
+            List<GeographicPoint> currentPath = queue.remove();
+            MapNode currentNode = nodes.get(path.get(path.size() - 1));
 
+            // if the current node is the goal return the path
+            if (currentNode.getLocation() == goal)
+                return currentPath;
+
+            // loop through current nodes edges to get next points
+            for (MapEdge edge : currentNode.getEdges()) {
+                MapNode next = nodes.get(edge.getTo());
+                if (!visited.contains(next)) {
+                    visited.add(next);
+
+                    // create new path with next point
+                    List<GeographicPoint> newPath = new ArrayList<>(currentPath);
+                    newPath.add(next.getLocation());
+                    queue.add(newPath);
+
+                    // Hook for visualization.  See writeup.
+                    nodeSearched.accept(next.getLocation());
+                }
+            }
+        }
+
+        // no path was found
 		return null;
 	}
 	
