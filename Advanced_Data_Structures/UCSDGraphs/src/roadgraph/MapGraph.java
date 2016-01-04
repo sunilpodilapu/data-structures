@@ -12,7 +12,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import geography.GeographicPoint;
-import gmapsfx.javascript.object.GoogleMap;
 import util.GraphLoader;
 
 /**
@@ -155,36 +154,34 @@ public class MapGraph {
 		// Implement this method in WEEK 2
 
         // create a queue with starting node and visited list
-		Queue<List> queue = new PriorityQueue<>();
+		Queue<MapNode> queue = new ArrayDeque<>();
         Set<MapNode> visited = new HashSet<>();
-        List<GeographicPoint> path = new ArrayList<>();
+        HashMap<MapNode, MapNode> parentMap = new HashMap<>();
 
         // starting node put in queue path
-        path.add(start);
-		queue.add(path);
+		queue.add(nodes.get(start));
 
         // visit each node in queue and add any new nodes until hit goal if do
         while (!queue.isEmpty()) {
-            List<GeographicPoint> currentPath = queue.remove();
-            MapNode currentNode = nodes.get(path.get(path.size() - 1));
+            MapNode currentNode = queue.remove();
+
+            // Hook for visualization.  See writeup.
+            nodeSearched.accept(currentNode.getLocation());
 
             // if the current node is the goal return the path
-            if (currentNode.getLocation() == goal)
-                return currentPath;
+            if (currentNode == nodes.get(goal))
+                return bfsPathBuilder(nodes.get(start), nodes.get(goal), parentMap);
 
             // loop through current nodes edges to get next points
             for (MapEdge edge : currentNode.getEdges()) {
                 MapNode next = nodes.get(edge.getTo());
                 if (!visited.contains(next)) {
+                    // add next node to queue and visited
                     visited.add(next);
+                    queue.add(next);
 
-                    // create new path with next point
-                    List<GeographicPoint> newPath = new ArrayList<>(currentPath);
-                    newPath.add(next.getLocation());
-                    queue.add(newPath);
-
-                    // Hook for visualization.  See writeup.
-                    nodeSearched.accept(next.getLocation());
+                    // add next node and its parent to parent map
+                    parentMap.put(next, currentNode);
                 }
             }
         }
@@ -192,6 +189,34 @@ public class MapGraph {
         // no path was found
 		return null;
 	}
+
+    /**
+     * Transforms parent map into list with correct path for BFS
+     *
+     * @param start MapNode starting point
+     * @param goal MapNode ending point
+     * @param parentMap HashMap with relationships
+     * @return List of GeographicPoints
+     */
+    private List<GeographicPoint> bfsPathBuilder(
+            MapNode start, MapNode goal,
+            HashMap<MapNode, MapNode> parentMap) {
+
+        // initiate the path to build
+        List<GeographicPoint> path = new LinkedList<>();
+        MapNode currentNode = goal;
+        path.add(currentNode.getLocation());
+
+        // cycle through parent map and build path with GeographicPoints
+        while(currentNode != start) {
+            currentNode = parentMap.get(currentNode);
+            path.add(currentNode.getLocation());
+        }
+
+        // reverse the path built and return
+        Collections.reverse(path);
+        return path;
+    }
 	
 
 	/** Find the path from start to goal using Dijkstra's algorithm
