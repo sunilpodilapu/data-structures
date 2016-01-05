@@ -170,7 +170,7 @@ public class MapGraph {
 
             // if the current node is the goal return the path
             if (currentNode == nodes.get(goal))
-                return bfsPathBuilder(nodes.get(start), nodes.get(goal), parentMap);
+                return pathBuilder(nodes.get(start), nodes.get(goal), parentMap);
 
             // loop through current nodes edges to get next points
             for (MapEdge edge : currentNode.getEdges()) {
@@ -189,34 +189,6 @@ public class MapGraph {
         // no path was found
 		return null;
 	}
-
-    /**
-     * Transforms parent map into list with correct path for BFS
-     *
-     * @param start MapNode starting point
-     * @param goal MapNode ending point
-     * @param parentMap HashMap with relationships
-     * @return List of GeographicPoints
-     */
-    private List<GeographicPoint> bfsPathBuilder(
-            MapNode start, MapNode goal,
-            HashMap<MapNode, MapNode> parentMap) {
-
-        // initiate the path to build
-        List<GeographicPoint> path = new LinkedList<>();
-        MapNode currentNode = goal;
-        path.add(currentNode.getLocation());
-
-        // cycle through parent map and build path with GeographicPoints
-        while(currentNode != start) {
-            currentNode = parentMap.get(currentNode);
-            path.add(currentNode.getLocation());
-        }
-
-        // reverse the path built and return
-        Collections.reverse(path);
-        return path;
-    }
 	
 
 	/** Find the path from start to goal using Dijkstra's algorithm
@@ -244,7 +216,17 @@ public class MapGraph {
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 3
+		// Implement this method in WEEK 3
+        // priority queue and comparator implementation
+        Queue<MapNode> queue = new PriorityQueue<MapNode>(new Comparator<MapNode>() {
+            public int compare(MapNode node1, MapNode node2) {
+
+                return (patient1.isEmergencyCase() == patient2.isEmergencyCase()) ? (Integer.valueOf(patient1.getId()).compareTo(patient2.getId()))
+                        : (patient1.isEmergencyCase() ? -1 : 1);
+            }
+        });
+        Set<MapNode> visited = new HashSet<>();
+
 
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
@@ -284,6 +266,34 @@ public class MapGraph {
 		return null;
 	}
 
+
+	/**
+	 * Transforms parent map into list with correct path
+	 *
+	 * @param start MapNode starting point
+	 * @param goal MapNode ending point
+	 * @param parentMap HashMap with relationships
+	 * @return List of GeographicPoints
+	 */
+	private List<GeographicPoint> pathBuilder(
+			MapNode start, MapNode goal,
+			HashMap<MapNode, MapNode> parentMap) {
+
+		// initiate the path to build
+		List<GeographicPoint> path = new LinkedList<>();
+		MapNode currentNode = goal;
+		path.add(currentNode.getLocation());
+
+		// cycle through parent map and build path with GeographicPoints
+		while(currentNode != start) {
+			currentNode = parentMap.get(currentNode);
+			path.add(currentNode.getLocation());
+		}
+
+		// reverse the path built and return
+		Collections.reverse(path);
+		return path;
+	}
 	
 	
 	public static void main(String[] args)
