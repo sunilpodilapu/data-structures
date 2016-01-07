@@ -226,7 +226,7 @@ public class MapGraph {
         // priority queue and comparator implementation
         Queue<MapNode> queue = new PriorityQueue<>(new Comparator<MapNode>() {
             public int compare(MapNode node1, MapNode node2) {
-                return (distances.get(node1) < distances.get(node2)) ? 1 : -1;
+                return (distances.get(node1) > distances.get(node2)) ? 1 : -1;
             }
         });
 
@@ -297,12 +297,65 @@ public class MapGraph {
 	public List<GeographicPoint> aStarSearch(GeographicPoint start, 
 											 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 3
-		
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
-		
-		return null;
+        // Implement this method in WEEK 3
+        Set<MapNode> visited = new HashSet<>();
+        HashMap<MapNode, MapNode> parentMap = new HashMap<>();
+        HashMap<MapNode, Double> distances = new HashMap<>();
+        MapNode startNode = nodes.get(start);
+        MapNode goalNode = nodes.get(goal);
+
+        // priority queue and comparator implementation
+        Queue<MapNode> queue = new PriorityQueue<>(new Comparator<MapNode>() {
+            public int compare(MapNode node1, MapNode node2) {
+                if (distances.get(node1) + node1.getLocation().distance(goal) >
+                        distances.get(node2) + node2.getLocation().distance(goal))
+                    return 1;
+                else
+                    return -1;
+            }
+        });
+
+        // insert starting point into queue and distance hash
+        queue.add(startNode);
+        distances.put(startNode, 0.0);
+
+        // cycle through queue until no more points
+        while (!queue.isEmpty()) {
+
+            // remove first node and check if visited yet
+            MapNode currentNode = queue.remove();
+            if (visited.contains(currentNode))
+                continue;
+            else
+                visited.add(currentNode);
+
+            // if current is the end goal node build path and return
+            if (currentNode == goalNode)
+                return pathBuilder(startNode, goalNode, parentMap);
+
+            // loop through current nodes neighbors
+            for (MapEdge edge : currentNode.getEdges()) {
+                MapNode neighbor = nodes.get(edge.getTo());
+
+                // if neighbor already visited skip
+                if (visited.contains(neighbor))
+                    continue;
+
+                // if neighbor doesn't exist or if shorter distance update distances
+                if (!distances.containsKey(neighbor) ||
+                        distances.get(currentNode) + edge.getLength() < distances.get(neighbor)) {
+                    distances.put(neighbor, edge.getLength() + distances.get(currentNode));
+                    parentMap.put(neighbor, currentNode);
+                    queue.add(neighbor);
+                }
+
+                // Hook for visualization.  See writeup.
+                nodeSearched.accept(neighbor.getLocation());
+            }
+        }
+
+        // no path was found
+        return null;
 	}
 
 
