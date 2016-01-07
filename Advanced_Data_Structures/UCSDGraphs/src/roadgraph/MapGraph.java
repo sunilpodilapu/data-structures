@@ -165,9 +165,6 @@ public class MapGraph {
         while (!queue.isEmpty()) {
             MapNode currentNode = queue.remove();
 
-            // Hook for visualization.  See writeup.
-            nodeSearched.accept(currentNode.getLocation());
-
             // if the current node is the goal return the path
             if (currentNode == nodes.get(goal))
                 return pathBuilder(nodes.get(start), nodes.get(goal), parentMap);
@@ -182,6 +179,9 @@ public class MapGraph {
 
                     // add next node and its parent to parent map
                     parentMap.put(next, currentNode);
+
+                    // Hook for visualization.  See writeup.
+                    nodeSearched.accept(next.getLocation());
                 }
             }
         }
@@ -217,20 +217,59 @@ public class MapGraph {
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// Implement this method in WEEK 3
-        // priority queue and comparator implementation
-        Queue<MapNode> queue = new PriorityQueue<MapNode>(new Comparator<MapNode>() {
-            public int compare(MapNode node1, MapNode node2) {
+        Set<MapNode> visited = new HashSet<>();
+        HashMap<MapNode, MapNode> parentMap = new HashMap<>();
+        HashMap<MapNode, Double> distances = new HashMap<>();
+        MapNode startNode = nodes.get(start);
+        MapNode goalNode = nodes.get(goal);
 
-                return (patient1.isEmergencyCase() == patient2.isEmergencyCase()) ? (Integer.valueOf(patient1.getId()).compareTo(patient2.getId()))
-                        : (patient1.isEmergencyCase() ? -1 : 1);
+        // priority queue and comparator implementation
+        Queue<MapNode> queue = new PriorityQueue<>(new Comparator<MapNode>() {
+            public int compare(MapNode node1, MapNode node2) {
+                return (distances.get(node1) < distances.get(node2)) ? 1 : -1;
             }
         });
-        Set<MapNode> visited = new HashSet<>();
 
+        // insert starting point into queue and distance hash
+        queue.add(startNode);
+        distances.put(startNode, 0.0);
 
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
-		
+        // cycle through queue until no more points
+        while (!queue.isEmpty()) {
+
+            // remove first node and check if visited yet
+            MapNode currentNode = queue.remove();
+            if (visited.contains(currentNode))
+                continue;
+            else
+                visited.add(currentNode);
+
+            // if current is the end goal node build path and return
+            if (currentNode == goalNode)
+                return pathBuilder(startNode, goalNode, parentMap);
+
+            // loop through current nodes neighbors
+            for (MapEdge edge : currentNode.getEdges()) {
+                MapNode neighbor = nodes.get(edge.getTo());
+
+                // if neighbor already visited skip
+                if (visited.contains(neighbor))
+                    continue;
+
+                // if neighbor doesn't exist or if shorter distance update distances
+                if (!distances.containsKey(neighbor) ||
+                        distances.get(currentNode) + edge.getLength() < distances.get(neighbor)) {
+                    distances.put(neighbor, edge.getLength() + distances.get(currentNode));
+                    parentMap.put(neighbor, currentNode);
+                    queue.add(neighbor);
+                }
+
+                // Hook for visualization.  See writeup.
+                nodeSearched.accept(neighbor.getLocation());
+            }
+        }
+
+        // no path was found
 		return null;
 	}
 
@@ -298,15 +337,17 @@ public class MapGraph {
 	
 	public static void main(String[] args)
 	{
+        /*
 		System.out.print("Making a new map...");
 		MapGraph theMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");
 		GraphLoader.loadRoadMap("data/testdata/simpletest.map", theMap);
 		System.out.println("DONE.");
-		
+		*/
+
 		// You can use this method for testing.  
 		
-		/* Use this code in Week 3 End of Week Quiz
+		// Use this code in Week 3 End of Week Quiz
 		MapGraph theMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");
 		GraphLoader.loadRoadMap("data/maps/utc.map", theMap);
@@ -317,6 +358,9 @@ public class MapGraph {
 		
 		
 		List<GeographicPoint> route = theMap.dijkstra(start,end);
+        System.out.println(route);
+
+        /*
 		List<GeographicPoint> route2 = theMap.aStarSearch(start,end);
 
 		*/
