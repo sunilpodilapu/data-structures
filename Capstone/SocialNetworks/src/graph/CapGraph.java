@@ -3,10 +3,7 @@
  */
 package graph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Your name here.
@@ -17,10 +14,10 @@ import java.util.List;
  */
 public class CapGraph implements Graph {
 
-	private HashMap<Integer, ArrayList<Integer>> graph;
+	private Set<Node> graph;
 
     public CapGraph() {
-        graph = new HashMap<>();
+        graph = new HashSet<>();
     }
 
 	/* (non-Javadoc)
@@ -38,6 +35,8 @@ public class CapGraph implements Graph {
 	@Override
 	public void addEdge(int from, int to) {
 
+        addVertex(from);
+        addVertex(to);
 
 	}
 
