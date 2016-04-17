@@ -1,0 +1,6 @@
+.DS_Store
+*workspace.xml
+*vcs.xml
+.idea
+*.eml
+*.iml
