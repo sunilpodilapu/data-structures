@@ -1,7 +1,7 @@
 package graph;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Node class for graph
@@ -12,8 +12,8 @@ public class Node {
     private int node;
 
     // set of incoming and reversed neighbors
-    private SortedSet<Node> neighbors;
-    private SortedSet<Node> reverseNeighbors;
+    private Set<Node> neighbors;
+    private Set<Node> reverseNeighbors;
 
     /**
      * Constructor for node class.  Initializes sets and sets the node variable.
@@ -21,8 +21,8 @@ public class Node {
      */
     public Node(int node) {
         this.node = node;
-        neighbors = new TreeSet<>();
-        reverseNeighbors = new TreeSet<>();
+        neighbors = new HashSet<>();
+        reverseNeighbors = new HashSet<>();
     }
 
     /**
@@ -47,7 +47,7 @@ public class Node {
      * Get the set of neighbors for this node.
      * @return set of neighbors, sorted
      */
-    public SortedSet<Node> getNeighbors() {
+    public Set<Node> getNeighbors() {
         return neighbors;
     }
 
@@ -55,7 +55,7 @@ public class Node {
      * Adds the reverse neighbor for a node
      * @param n - node to add
      */
-    public void addRevNeighbor(Node n) {
+    private void addRevNeighbor(Node n) {
         reverseNeighbors.add(n);
     }
 
@@ -63,7 +63,7 @@ public class Node {
      * Get the set of reverse neighbors for this node.
      * @return set of reverse neighbors, sorted
      */
-    public SortedSet<Node> getRevNeighbors() {
+    public Set<Node> getRevNeighbors() {
         return reverseNeighbors;
     }
 
@@ -71,7 +71,7 @@ public class Node {
      * Get the number of neighbors for this node
      * @return int of num neighbors
      */
-    public int getNumNbrs() {
+    public int numNeighbors() {
         return neighbors.size();
     }
 
@@ -79,7 +79,7 @@ public class Node {
      * Get the number of reversed neighbors for this node
      * @return int of num reversed neighbors
      */
-    public int getNumRevNbrs() {
+    public int numReverseNeighbors() {
         return reverseNeighbors.size();
     }
 }
