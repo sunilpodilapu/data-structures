@@ -1,8 +1,6 @@
 package graph;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +37,8 @@ public class CapGraph implements Graph {
         addVertex(to);
 
         // create edge between nodes
-        graph.get(from).addNeighbor(graph.get(to));
+        if (!graph.get(from).containsNeighbor(to))
+            graph.get(from).getNeighbors().add(graph.get(to));
 	}
 
 	/* (non-Javadoc)
@@ -47,8 +46,35 @@ public class CapGraph implements Graph {
 	 */
 	@Override
 	public Graph getEgonet(int center) {
-		// TODO Auto-generated method stub
-		return null;
+        CapGraph g = new CapGraph();
+
+        // if node doesn't exist then return empty graph
+        if (!graph.containsKey(center))
+            return g;
+
+        // add the center's outgoing connections
+        for (Node n : graph.get(center).getNeighbors())
+            g.addEdge(center, n.getSelf());
+
+        // add the center's incoming connections
+        for (Node n : graph.get(center).getRevNeighbors())
+            g.addEdge(n.getSelf(), center);
+
+        // check all added nodes for connections between them
+        Set<Integer> gNodes = g.getNodes().keySet();
+        for (Integer i : gNodes) {
+
+            // center's edges already added
+            if (i == center)
+                continue;
+
+            for (Node n : graph.get(i).getNeighbors()) {
+                if (gNodes.contains(n.getSelf()))
+                    g.addEdge(i, n.getSelf());
+            }
+        }
+
+		return g;
 	}
 
 	/* (non-Javadoc)
@@ -56,8 +82,11 @@ public class CapGraph implements Graph {
 	 */
 	@Override
 	public List<Graph> getSCCs() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Graph> graphList = new ArrayList<>();
+
+
+
+		return graphList;
 	}
 
 	/* (non-Javadoc)
@@ -82,5 +111,13 @@ public class CapGraph implements Graph {
 
 		return g;
 	}
+
+    /**
+     * Get all nodes currently in the graph
+     * @return hashmap of nodes
+     */
+    public HashMap<Integer, Node> getNodes() {
+        return this.graph;
+    }
 
 }

@@ -52,6 +52,20 @@ public class Node {
     }
 
     /**
+     * Checks if a there is an edge between this node and given node
+     * @param node - int of node check
+     * @return boolean
+     */
+    public boolean containsNeighbor(int node) {
+        for (Node n : neighbors) {
+            if (node == n.getSelf())
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Adds the reverse neighbor for a node
      * @param n - node to add
      */
