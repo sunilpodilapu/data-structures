@@ -7,3 +7,12 @@ package graph;
 public class Analyze {
 
 }
+
+
+// run all major graph algorithms here and do analysis
+// weighted calculation?
+
+// most connections
+// largest egonet
+// member of largest SCC
+// min cut...

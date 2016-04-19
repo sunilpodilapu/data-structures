@@ -8,9 +8,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test suite for Graph class
@@ -55,15 +55,26 @@ public class CapGraphTest {
         Graph en = graph.getEgonet(25);
         assertTrue(en.exportGraph().get(65).contains(23));
         assertFalse(en.exportGraph().get(65).contains(18));
+        System.out.println("Egonet passed");
     }
 
     @Ignore
     public void getSCC() {
+        List<Graph> graphs = graph.getSCCs();
 
     }
 
-    @Ignore
+    @Test
     public void numConnections() {
+        HashMap<Integer, Integer> connections = graph.getNumNeighbors();
+        assertTrue(3 == connections.get(25));
+        assertTrue(2 == connections.get(44));
+        assertFalse(1 == connections.get(32));
+        System.out.println("Number connections passed");
+    }
+
+    @Ignore
+    public void kargerMinCut() {
 
     }
 }

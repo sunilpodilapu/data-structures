@@ -41,6 +41,29 @@ public class CapGraph implements Graph {
             graph.get(from).getNeighbors().add(graph.get(to));
 	}
 
+    /* (non-Javadoc)
+     * @see graph.Graph#exportGraph()
+     */
+    @Override
+    public HashMap<Integer, HashSet<Integer>> exportGraph() {
+        HashMap<Integer, HashSet<Integer>> g = new HashMap<>();
+        HashSet<Integer> neighbors;
+
+        // build graph to return
+        for (Integer num : graph.keySet()) {
+            neighbors = new HashSet<>();
+
+            // build set of neighbors for the node
+            neighbors.addAll(graph.get(num).getNeighbors().stream().map(
+                    neighbor -> neighbor.getSelf()).collect(Collectors.toList()));
+
+            // place in newly built graph
+            g.put(num, neighbors);
+        }
+
+        return g;
+    }
+
 	/* (non-Javadoc)
 	 * @see graph.Graph#getEgonet(int)
 	 */
@@ -82,35 +105,73 @@ public class CapGraph implements Graph {
 	 */
 	@Override
 	public List<Graph> getSCCs() {
-		List<Graph> graphList = new ArrayList<>();
+        List<Integer> vertices = new ArrayList<>();
+        List<Integer> markers = new ArrayList<>();
 
+        // first pass through graph
+        vertices.addAll(this.getNodes().keySet());
+        vertices = dfsSCC(this, vertices, markers, false);
 
+        // second pass through graph
+        markers = new ArrayList<>();
+        vertices = dfsSCC(this, vertices, markers, true);
 
-		return graphList;
+        // build graphs and return
+		return buildSCCGraphs(vertices, markers);
 	}
 
-	/* (non-Javadoc)
-	 * @see graph.Graph#exportGraph()
-	 */
-	@Override
-	public HashMap<Integer, HashSet<Integer>> exportGraph() {
-        HashMap<Integer, HashSet<Integer>> g = new HashMap<>();
-        HashSet<Integer> neighbors;
+    private List<Integer> dfsSCC(CapGraph g, List<Integer> vertices, List<Integer> markers, boolean reverse) {
+        List<Integer> visited = new ArrayList<>();
+        List<Integer> finished = new ArrayList<>();
+        int vertex;
 
-        // build graph to return
-        for (Integer num : graph.keySet()) {
-            neighbors = new HashSet<>();
+        // loop through all vertices popping from the stack
+        while (vertices.size() > 0) {
+            vertex = vertices.remove(vertices.size() - 1);
 
-            // build set of neighbors for the node
-            neighbors.addAll(graph.get(num).getNeighbors().stream().map(
-                    neighbor -> neighbor.getSelf()).collect(Collectors.toList()));
+            // only explore a vertex if its not in visited
+            if (!visited.contains(vertex))
+                dfsSCCVisited(g, vertex, visited, finished, reverse);
 
-            // place in newly built graph
-            g.put(num, neighbors);
+            // one a search completes set a marker to signal a SCC
+            markers.add(finished.size() - 1);
         }
 
-		return g;
-	}
+        return finished;
+    }
+
+    private void dfsSCCVisited(CapGraph g, int vertex, List<Integer> visited,
+                               List<Integer> finished, boolean reverse) {
+        Set<Node> neighbors;
+
+        // add to visited if not already there
+        if (!visited.contains(vertex))
+            visited.add(vertex);
+
+        // depending if this is forward pass or reverse, get vertex's neighbors
+        if (reverse)
+            neighbors = g.getNodes().get(vertex).getRevNeighbors();
+        else
+            neighbors = g.getNodes().get(vertex).getNeighbors();
+
+        // for each neighbor do a depth first search of its neighbors
+        for (Node neighbor : neighbors) {
+            if (!visited.contains(neighbor.getSelf()))
+                dfsSCCVisited(g, neighbor.getSelf(), visited, finished, reverse);
+        }
+
+        // finally add to finished if its not there already
+        if (!finished.contains(vertex))
+            finished.add(vertex);
+    }
+
+
+
+    private List<Graph> buildSCCGraphs(List<Integer> vertices, List<Integer> markers) {
+
+
+        return null;
+    }
 
     /**
      * Get all nodes currently in the graph
@@ -120,4 +181,21 @@ public class CapGraph implements Graph {
         return this.graph;
     }
 
+    /**
+     * Builds hash of each vertex's total number of outgoing edges
+     * @return hashmap
+     */
+    public HashMap<Integer, Integer> getNumNeighbors() {
+        HashMap<Integer, Integer> connections = new HashMap<>();
+
+        // get total number of outgoing neighbors for each vertex
+        for (int vertex : graph.keySet())
+            connections.put(vertex, graph.get(vertex).getNeighbors().size());
+
+        return connections;
+    }
+
+    public void minCut() {
+
+    }
 }
