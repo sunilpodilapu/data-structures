@@ -1,9 +1,7 @@
 package graph;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Node class for graph
@@ -14,9 +12,8 @@ public class Node {
     private int node;
 
     // set of incoming and reversed neighbors
-    private Set<Node> neighbors;
-    private Set<Node> reverseNeighbors;
-    private List<Node> kargerNeighbors;
+    private List<Node> neighbors;
+    private List<Node> reverseNeighbors;
 
     /**
      * Constructor for node class.  Initializes sets and sets the node variable.
@@ -24,8 +21,8 @@ public class Node {
      */
     public Node(int node) {
         this.node = node;
-        neighbors = new HashSet<>();
-        reverseNeighbors = new HashSet<>();
+        neighbors = new ArrayList<>();
+        reverseNeighbors = new ArrayList<>();
     }
 
     /**
@@ -50,7 +47,7 @@ public class Node {
      * Get the set of neighbors for this node.
      * @return set of neighbors, sorted
      */
-    public Set<Node> getNeighbors() {
+    public List<Node> getNeighbors() {
         return neighbors;
     }
 
@@ -80,7 +77,7 @@ public class Node {
      * Get the set of reverse neighbors for this node.
      * @return set of reverse neighbors, sorted
      */
-    public Set<Node> getRevNeighbors() {
+    public List<Node> getRevNeighbors() {
         return reverseNeighbors;
     }
 
@@ -101,29 +98,13 @@ public class Node {
     }
 
     public void removeNeighbor(Node n) {
-        if (neighbors.contains(n)) {
+        while (neighbors.contains(n))
             neighbors.remove(n);
-            n.removeRevNeighbor(this);
-        }
+        n.removeRevNeighbor(this);
     }
 
     private void removeRevNeighbor(Node n) {
-        if (reverseNeighbors.contains(n))
+        while (reverseNeighbors.contains(n))
             reverseNeighbors.remove(n);
-    }
-
-    public void initNodesAbsorbed() {
-        kargerNeighbors = new ArrayList<>();
-    }
-
-    public void absorbNode(Node n) {
-        if (kargerNeighbors != null) {
-            kargerNeighbors.add(n);
-            kargerNeighbors.addAll(n.getNodesAbsorbed());
-        }
-    }
-
-    public List<Node> getNodesAbsorbed() {
-        return kargerNeighbors;
     }
 }

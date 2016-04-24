@@ -48,8 +48,6 @@ public class CapGraphTest {
         assertTrue(nodes.get(25).containsNeighbor(nodes.get(18)));
         assertFalse(nodes.get(23).containsNeighbor(nodes.get(44)));
         assertFalse(nodes.get(32).containsNeighbor(nodes.get(50)));
-
-        // need to test reverse neighbors due to issue TODO
     }
 
     @Test
@@ -107,7 +105,10 @@ public class CapGraphTest {
         graph2.addEdge(4, 5);
         graph2.addEdge(5, 3);
         graph2.addEdge(5, 4);
+        int cuts = graph2.getMinCuts(20);
+        assertTrue(4 == cuts);
 
-        assertTrue(2 == graph2.getMinCuts(20));
+        cuts = graph.getMinCuts(100);
+        assertTrue(1 == cuts);
     }
 }
