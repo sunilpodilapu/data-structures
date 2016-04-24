@@ -38,7 +38,7 @@ public class CapGraph implements Graph {
 
         // create edge between nodes
         if (!graph.get(from).containsNeighbor(to))
-            graph.get(from).getNeighbors().add(graph.get(to));
+            graph.get(from).addNeighbor(graph.get(to));
 	}
 
     /* (non-Javadoc)
@@ -110,17 +110,17 @@ public class CapGraph implements Graph {
 
         // first pass through graph
         vertices.addAll(this.getNodes().keySet());
-        vertices = dfsSCC(this, vertices, markers, false);
+        vertices = dfsSCC(vertices, markers, false);
 
         // second pass through graph
         markers = new ArrayList<>();
-        vertices = dfsSCC(this, vertices, markers, true);
+        vertices = dfsSCC(vertices, markers, true);
 
         // build graphs and return
 		return buildSCCGraphs(vertices, markers);
 	}
 
-    private List<Integer> dfsSCC(CapGraph g, List<Integer> vertices, List<Integer> markers, boolean reverse) {
+    private List<Integer> dfsSCC(List<Integer> vertices, List<Integer> markers, boolean reverse) {
         List<Integer> visited = new ArrayList<>();
         List<Integer> finished = new ArrayList<>();
         int vertex;
@@ -130,47 +130,69 @@ public class CapGraph implements Graph {
             vertex = vertices.remove(vertices.size() - 1);
 
             // only explore a vertex if its not in visited
-            if (!visited.contains(vertex))
-                dfsSCCVisited(g, vertex, visited, finished, reverse);
+            if (!visited.contains(vertex)) {
+                dfsSCCVisited(vertex, visited, finished, reverse);
 
-            // one a search completes set a marker to signal a SCC
-            markers.add(finished.size() - 1);
+                // one a search completes set a marker to signal a SCC
+                markers.add(finished.size() - 1);
+            }
         }
 
         return finished;
     }
 
-    private void dfsSCCVisited(CapGraph g, int vertex, List<Integer> visited,
+    private void dfsSCCVisited(int vertex, List<Integer> visited,
                                List<Integer> finished, boolean reverse) {
         Set<Node> neighbors;
 
         // add to visited if not already there
-        if (!visited.contains(vertex))
-            visited.add(vertex);
+        visited.add(vertex);
 
         // depending if this is forward pass or reverse, get vertex's neighbors
         if (reverse)
-            neighbors = g.getNodes().get(vertex).getRevNeighbors();
+            neighbors = graph.get(vertex).getRevNeighbors();
         else
-            neighbors = g.getNodes().get(vertex).getNeighbors();
+            neighbors = graph.get(vertex).getNeighbors();
 
         // for each neighbor do a depth first search of its neighbors
         for (Node neighbor : neighbors) {
             if (!visited.contains(neighbor.getSelf()))
-                dfsSCCVisited(g, neighbor.getSelf(), visited, finished, reverse);
+                dfsSCCVisited(neighbor.getSelf(), visited, finished, reverse);
         }
 
-        // finally add to finished if its not there already
+        // add vertex to finished
         if (!finished.contains(vertex))
             finished.add(vertex);
     }
 
-
-
     private List<Graph> buildSCCGraphs(List<Integer> vertices, List<Integer> markers) {
+        List<Graph> graphs = new ArrayList<>();
+        Graph newGraph = new CapGraph();
+        int currentPosition = markers.remove(0);
+        int lastPosition = 0;
 
+        // check each vertex and add it to a graph
+        for (int i = 0; i < vertices.size(); i++) {
+            newGraph.addVertex(vertices.get(i));
 
-        return null;
+            // grab all verticex between last and current position and build edges
+            for (int j = lastPosition; j < currentPosition; j++) {
+                if (graph.get(vertices.get(i)).containsNeighbor(vertices.get(j)))
+                    newGraph.addEdge(vertices.get(i), vertices.get(j));
+            }
+
+            // move all position markers and create new graph
+            if (i == currentPosition) {
+                lastPosition = currentPosition;
+                graphs.add(newGraph);
+                newGraph = new CapGraph();
+
+                if (markers.size() > 0)
+                    currentPosition = markers.remove(0);
+            }
+        }
+
+        return graphs;
     }
 
     /**
