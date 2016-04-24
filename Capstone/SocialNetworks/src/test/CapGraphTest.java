@@ -44,10 +44,10 @@ public class CapGraphTest {
     public void loadGraph() {
         System.out.println("Testing graph load");
         HashMap<Integer, Node> nodes = graph.getNodes();
-        assertTrue(nodes.get(65).containsNeighbor(23));
-        assertTrue(nodes.get(25).containsNeighbor(18));
-        assertFalse(nodes.get(23).containsNeighbor(44));
-        assertFalse(nodes.get(32).containsNeighbor(50));
+        assertTrue(nodes.get(65).containsNeighbor(nodes.get(23)));
+        assertTrue(nodes.get(25).containsNeighbor(nodes.get(18)));
+        assertFalse(nodes.get(23).containsNeighbor(nodes.get(44)));
+        assertFalse(nodes.get(32).containsNeighbor(nodes.get(50)));
 
         // need to test reverse neighbors due to issue TODO
     }
@@ -94,7 +94,23 @@ public class CapGraphTest {
 
     @Test
     public void kargerMinCut() {
+        System.out.println("Testing karger min cut");
+        CapGraph graph2 = new CapGraph();
+        graph2.addEdge(1, 2);
+        graph2.addEdge(1, 3);
+        graph2.addEdge(1, 4);
+        graph2.addEdge(2, 1);
+        graph2.addEdge(2, 3);
+        graph2.addEdge(2, 4);
+        graph2.addEdge(3, 1);
+        graph2.addEdge(3, 2);
+        graph2.addEdge(3, 5);
+        graph2.addEdge(4, 1);
+        graph2.addEdge(4, 2);
+        graph2.addEdge(4, 5);
+        graph2.addEdge(5, 3);
+        graph2.addEdge(5, 4);
 
-
+        assertTrue(2 == graph2.getMinCuts(20));
     }
 }
