@@ -244,13 +244,31 @@ public class CapGraph implements Graph {
         return connections;
     }
 
-    public int getMinCuts() {
-        initKargerMinCut();
-        return kargerMinCut(this);
+    public int getMinCuts(int numTrials) {
+        int min_cut = Integer.MAX_VALUE;
+        int current_cut;
+        CapGraph graph_copy;
+
+        // perform specified number of trials
+        System.out.print("Trial");
+        for (int numTrial = 0; numTrial < numTrials; numTrial++) {
+            System.out.print(numTrial + "...");
+
+            // copy graph, initialize karger min, and find min cuts
+            graph_copy = copy();
+            graph_copy.initKargerMinCut();
+            current_cut = kargerMinCut(graph_copy);
+
+            // set min cut if current cut is lower
+            if (current_cut < min_cut)
+                min_cut = current_cut;
+        }
+
+        System.out.println("finished");
+        return min_cut;
     }
 
     private int kargerMinCut(CapGraph g) {
-        int cuts = 0;
         int graph_size = g.getNodes().size();
         Node node_u, node_v;
         Set<Node> neighbors;
@@ -258,27 +276,41 @@ public class CapGraph implements Graph {
         // keep contracting
         while (graph_size > 2) {
 
-            // get a random edge
+            // get a random edge and add contracted node_u to node_v karger list
             node_u = getRandomChoice(g.getNodes().values());
             node_v = getRandomChoice(node_u.getNeighbors());
+            node_v.absorbNode(node_u);
 
+            // get all outgoing edges
             neighbors = node_u.getNeighbors();
-            neighbors.addAll(node_v.getNeighbors());
-
             for (Node n : neighbors) {
 
+                // if the nodes are the same skip
                 if (n.getSelf() == node_u.getSelf() || n.getSelf() == node_v.getSelf())
                     continue;
 
-                if (node_u.containsNeighbor(n))
-                    break;
+                // add outgoing connection to node_v
+                node_v.addNeighbor(n);
             }
 
+            // grab all incoming edges
+            neighbors = node_u.getRevNeighbors();
+            for (Node n : neighbors) {
+
+                // if nodes are the same then skip
+                if (n.getSelf() == node_u.getSelf() || n.getSelf() == node_v.getSelf())
+                    continue;
+
+                // add incoming connectings to node_v
+                n.addNeighbor(node_v);
+            }
+
+            // remove node from graph and get new graph size
             g.removeNode(node_u);
             graph_size = g.getNodes().size();
         }
 
-        return cuts;
+        return getRandomChoice(g.getNodes().values()).getNodesAbsorbed().size();
     }
 
     private Node getRandomChoice(Collection<Node> vertices) {
@@ -308,11 +340,16 @@ public class CapGraph implements Graph {
     public CapGraph copy() {
         CapGraph g = new CapGraph();
 
+        for (Integer vertex : graph.keySet()) {
+            for (Node n : graph.get(vertex).getNeighbors())
+                g.addEdge(vertex, n.getSelf());
+        }
+
         return g;
     }
 
     private void initKargerMinCut() {
         for (int vertex : graph.keySet())
-            graph.get(vertex).initKarger();
+            graph.get(vertex).initNodesAbsorbed();
     }
 }

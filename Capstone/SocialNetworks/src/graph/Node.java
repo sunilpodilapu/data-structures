@@ -112,16 +112,18 @@ public class Node {
             reverseNeighbors.remove(n);
     }
 
-    public Node copy() {
-        return null;
-    }
-
-    public void initKarger() {
+    public void initNodesAbsorbed() {
         kargerNeighbors = new ArrayList<>();
     }
 
-    public void contractNeighbor(Node n) {
-        if (kargerNeighbors != null)
+    public void absorbNode(Node n) {
+        if (kargerNeighbors != null) {
             kargerNeighbors.add(n);
+            kargerNeighbors.addAll(n.getNodesAbsorbed());
+        }
+    }
+
+    public List<Node> getNodesAbsorbed() {
+        return kargerNeighbors;
     }
 }
