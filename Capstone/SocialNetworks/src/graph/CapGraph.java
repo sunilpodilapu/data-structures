@@ -234,14 +234,15 @@ public class CapGraph implements Graph {
      * Builds hash of each vertex's total number of outgoing edges
      * @return hashmap
      */
-    public HashMap<Integer, Integer> getNumNeighbors() {
-        HashMap<Integer, Integer> connections = new HashMap<>();
+    public double getEdgeNodeRatio() {
+        double numEdges = 0;
+        double numNodes = graph.size();
 
         // get total number of outgoing neighbors for each vertex
         for (int vertex : graph.keySet())
-            connections.put(vertex, graph.get(vertex).getNeighbors().size());
+            numEdges +=  graph.get(vertex).getNeighbors().size();
 
-        return connections;
+        return numNodes / numEdges;
     }
 
     public int getMinCuts(int numTrials) {
@@ -250,7 +251,7 @@ public class CapGraph implements Graph {
         CapGraph graph_copy;
 
         // perform specified number of trials
-        System.out.print("Trial");
+        System.out.print("Trial ");
         for (int numTrial = 0; numTrial < numTrials; numTrial++) {
             System.out.print(numTrial + "...");
 
@@ -279,6 +280,11 @@ public class CapGraph implements Graph {
             // get a random edge and add contracted node_u to node_v karger list
             node_u = getRandomChoice(g.getNodes().values());
             node_v = getRandomChoice(node_u.getNeighbors());
+
+            if (node_v == null)
+                node_v = getRandomChoice(node_u.getRevNeighbors());
+
+            System.err.println("u: " + node_u.getSelf() + " v: " + node_v.getSelf());
             node_v.absorbNode(node_u);
 
             // get all outgoing edges
@@ -316,6 +322,9 @@ public class CapGraph implements Graph {
     private Node getRandomChoice(Collection<Node> vertices) {
         Random rand = new Random();
         Iterator<Node> iterator = vertices.iterator();
+
+        if (vertices.size() < 1)
+            return null;
 
         // set random value to get and iterate till its found
         int index = rand.nextInt(vertices.size());

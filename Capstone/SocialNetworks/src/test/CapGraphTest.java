@@ -84,12 +84,9 @@ public class CapGraphTest {
     }
 
     @Test
-    public void numConnections() {  //TODO revise to vertices/edges ratio test
+    public void numConnections() {
         System.out.println("Testing number of connections");
-        HashMap<Integer, Integer> connections = graph.getNumNeighbors();
-        assertTrue(3 == connections.get(25));
-        assertTrue(2 == connections.get(44));
-        assertFalse(1 == connections.get(32));
+        assertTrue(graph.getEdgeNodeRatio() - ((double) 7 / 11) < 0.001);
     }
 
     @Test
