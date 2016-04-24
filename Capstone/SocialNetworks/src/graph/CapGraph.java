@@ -120,6 +120,16 @@ public class CapGraph implements Graph {
 		return buildSCCGraphs(vertices, markers);
 	}
 
+    /**
+     * Initiates depth first search on graph in order to find Strongly Connected Components.
+     * First pass sorts the vertices in the order the SCC's exist.  Second pass should be searched
+     * in reverse and places the vertices in the correct order of their SCC and notates those
+     * locations in the markers list
+     * @param vertices - list of vertices in graph to search
+     * @param markers - list points where SCC's could exist
+     * @param reverse - boolean whether to reverse search the graph (flip directional edges)
+     * @return order list of vertices
+     */
     private List<Integer> dfsSCC(List<Integer> vertices, List<Integer> markers, boolean reverse) {
         List<Integer> visited = new ArrayList<>();
         List<Integer> finished = new ArrayList<>();
@@ -141,6 +151,15 @@ public class CapGraph implements Graph {
         return finished;
     }
 
+    /**
+     * Helper method for DFS-SCC.  Recursively searches a vertex's neighbor for more
+     * neighbors and is where vertices are added to both the visited list and the
+     * finished list for their appropiate ordering
+     * @param vertex - vertex whos neighbors are to be searched
+     * @param visited - list of visited vertices
+     * @param finished - list of finished vertices
+     * @param reverse - boolean whether or not to flip the edge directions
+     */
     private void dfsSCCVisited(int vertex, List<Integer> visited,
                                List<Integer> finished, boolean reverse) {
         Set<Node> neighbors;
@@ -165,6 +184,14 @@ public class CapGraph implements Graph {
             finished.add(vertex);
     }
 
+    /**
+     * Rebuild graphs based on the DFS-SCC results. Assumes markers have correct location
+     * of where one SCC stops and another begins.  Connects vertices only if they are
+     * within the same mini graph.
+     * @param vertices - list of vertices to connect (in order)
+     * @param markers - list of locations for corresponding vertices in SCC's
+     * @return list of graphs based on SCC's in main graph
+     */
     private List<Graph> buildSCCGraphs(List<Integer> vertices, List<Integer> markers) {
         List<Graph> graphs = new ArrayList<>();
         Graph newGraph = new CapGraph();
