@@ -47,8 +47,8 @@ public class NodeTest {
         // test edge validity
         assertEquals(1, node1.numNeighbors());
         assertEquals(1, node3.numNeighbors());
-        assertTrue(node2.getNeighbors().contains(node3));
-        assertTrue(node4.getNeighbors().contains(node2));
+        assertTrue(node2.containsNeighbor(node3));
+        assertTrue(node4.containsNeighbor(node2));
 
         // test reverse edge validity
         assertEquals(2, node2.numReverseNeighbors());

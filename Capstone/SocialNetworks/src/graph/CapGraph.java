@@ -37,7 +37,7 @@ public class CapGraph implements Graph {
         addVertex(to);
 
         // create edge between nodes
-        if (!graph.get(from).containsNeighbor(to))
+        if (!graph.get(from).containsNeighbor(graph.get(to)))
             graph.get(from).addNeighbor(graph.get(to));
 	}
 
@@ -204,7 +204,7 @@ public class CapGraph implements Graph {
 
             // grab all verticex between last and current position and build edges
             for (int j = lastPosition; j < currentPosition; j++) {
-                if (graph.get(vertices.get(i)).containsNeighbor(vertices.get(j)))
+                if (graph.get(vertices.get(i)).containsNeighbor(graph.get(vertices.get(j))))
                     newGraph.addEdge(vertices.get(i), vertices.get(j));
             }
 
@@ -244,7 +244,75 @@ public class CapGraph implements Graph {
         return connections;
     }
 
-    public void minCut() {
+    public int getMinCuts() {
+        initKargerMinCut();
+        return kargerMinCut(this);
+    }
 
+    private int kargerMinCut(CapGraph g) {
+        int cuts = 0;
+        int graph_size = g.getNodes().size();
+        Node node_u, node_v;
+        Set<Node> neighbors;
+
+        // keep contracting
+        while (graph_size > 2) {
+
+            // get a random edge
+            node_u = getRandomChoice(g.getNodes().values());
+            node_v = getRandomChoice(node_u.getNeighbors());
+
+            neighbors = node_u.getNeighbors();
+            neighbors.addAll(node_v.getNeighbors());
+
+            for (Node n : neighbors) {
+
+                if (n.getSelf() == node_u.getSelf() || n.getSelf() == node_v.getSelf())
+                    continue;
+
+                if (node_u.containsNeighbor(n))
+                    break;
+            }
+
+            g.removeNode(node_u);
+            graph_size = g.getNodes().size();
+        }
+
+        return cuts;
+    }
+
+    private Node getRandomChoice(Collection<Node> vertices) {
+        Random rand = new Random();
+        Iterator<Node> iterator = vertices.iterator();
+
+        // set random value to get and iterate till its found
+        int index = rand.nextInt(vertices.size());
+        for (int i = 0; i < index; i++)
+            iterator.next();
+
+        return iterator.next();
+    }
+
+    public void removeNode(Node n) {
+
+        for (Integer vertex : graph.keySet()) {
+
+            if (vertex == n.getSelf())
+                continue;
+
+            n.removeNeighbor(graph.get(vertex));
+            graph.get(vertex).removeNeighbor(n);
+        }
+    }
+
+    public CapGraph copy() {
+        CapGraph g = new CapGraph();
+
+        return g;
+    }
+
+    private void initKargerMinCut() {
+        for (int vertex : graph.keySet())
+            graph.get(vertex).initKarger();
     }
 }

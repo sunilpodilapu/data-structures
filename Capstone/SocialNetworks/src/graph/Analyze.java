@@ -16,3 +16,11 @@ public class Analyze {
 // largest egonet
 // member of largest SCC
 // min cut...
+
+
+
+// version 2 - whole graph analysis
+// num edges / num vertices
+// average egonet size and largest
+// SCC - largest or average or both
+// number of cuts for min

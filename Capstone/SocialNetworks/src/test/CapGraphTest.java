@@ -4,13 +4,13 @@ import graph.CapGraph;
 import graph.Graph;
 import graph.Node;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test suite for Graph class
@@ -48,6 +48,8 @@ public class CapGraphTest {
         assertTrue(nodes.get(25).containsNeighbor(18));
         assertFalse(nodes.get(23).containsNeighbor(44));
         assertFalse(nodes.get(32).containsNeighbor(50));
+
+        // need to test reverse neighbors due to issue TODO
     }
 
     @Test
@@ -82,7 +84,7 @@ public class CapGraphTest {
     }
 
     @Test
-    public void numConnections() {
+    public void numConnections() {  //TODO revise to vertices/edges ratio test
         System.out.println("Testing number of connections");
         HashMap<Integer, Integer> connections = graph.getNumNeighbors();
         assertTrue(3 == connections.get(25));
@@ -90,8 +92,9 @@ public class CapGraphTest {
         assertFalse(1 == connections.get(32));
     }
 
-    @Ignore
+    @Test
     public void kargerMinCut() {
+
 
     }
 }

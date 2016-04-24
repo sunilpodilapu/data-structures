@@ -1,6 +1,8 @@
 package graph;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,6 +16,7 @@ public class Node {
     // set of incoming and reversed neighbors
     private Set<Node> neighbors;
     private Set<Node> reverseNeighbors;
+    private List<Node> kargerNeighbors;
 
     /**
      * Constructor for node class.  Initializes sets and sets the node variable.
@@ -53,12 +56,12 @@ public class Node {
 
     /**
      * Checks if a there is an edge between this node and given node
-     * @param node - int of node check
+     * @param n - Node to check
      * @return boolean
      */
-    public boolean containsNeighbor(int node) {
-        for (Node n : neighbors) {
-            if (node == n.getSelf())
+    public boolean containsNeighbor(Node n) {
+        for (Node neighbor : neighbors) {
+            if (n.getSelf() == neighbor.getSelf())
                 return true;
         }
 
@@ -95,5 +98,30 @@ public class Node {
      */
     public int numReverseNeighbors() {
         return reverseNeighbors.size();
+    }
+
+    public void removeNeighbor(Node n) {
+        if (neighbors.contains(n)) {
+            neighbors.remove(n);
+            n.removeRevNeighbor(this);
+        }
+    }
+
+    private void removeRevNeighbor(Node n) {
+        if (reverseNeighbors.contains(n))
+            reverseNeighbors.remove(n);
+    }
+
+    public Node copy() {
+        return null;
+    }
+
+    public void initKarger() {
+        kargerNeighbors = new ArrayList<>();
+    }
+
+    public void contractNeighbor(Node n) {
+        if (kargerNeighbors != null)
+            kargerNeighbors.add(n);
     }
 }
