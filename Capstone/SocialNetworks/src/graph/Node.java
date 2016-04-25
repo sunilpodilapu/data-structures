@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Node class for graph
+ * @author Mark
  */
 public class Node {
 

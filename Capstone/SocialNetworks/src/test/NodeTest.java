@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
  * Test suite for Node class
+ * @author Mark
  */
 public class NodeTest {
 

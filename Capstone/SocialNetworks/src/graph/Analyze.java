@@ -6,6 +6,7 @@ import java.util.*;
 /**
  * Class used for running main analysis on the CapGraph
  * for Social Networks
+ * @author Mark
  */
 public class Analyze {
 

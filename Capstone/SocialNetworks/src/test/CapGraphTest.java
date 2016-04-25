@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Test suite for Graph class
+ * @author Mark
  */
 public class CapGraphTest {
 

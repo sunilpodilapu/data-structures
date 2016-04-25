@@ -4,11 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Sub class to Graph class
  * @author Mark
- * 
- * For the warm up assignment, you must implement your Graph in a class
- * named CapGraph.  Here is the stub file.
- *
  */
 public class CapGraph implements Graph {
 
