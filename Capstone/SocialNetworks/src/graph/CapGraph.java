@@ -251,8 +251,8 @@ public class CapGraph implements Graph {
      * @return minimum cut found
      */
     public int getMinCuts(int numTrials) {
-        int min_cut = Integer.MAX_VALUE;
-        int current_cut;
+        int minCut = Integer.MAX_VALUE;
+        int currentCut;
         CapGraph graph_copy;
 
         // perform specified number of trials
@@ -261,16 +261,16 @@ public class CapGraph implements Graph {
 
             // copy graph and find min cuts
             graph_copy = copy();
-            current_cut = kargerMinCut(graph_copy);
+            currentCut = kargerMinCut(graph_copy);
 
             // set min cut if current cut is lower
-            if (current_cut < min_cut) {
-                min_cut = current_cut;
+            if (currentCut < minCut) {
+                minCut = currentCut;
             }
         }
 
         System.out.println("finished");
-        return min_cut;
+        return minCut;
     }
 
     /**
@@ -281,7 +281,7 @@ public class CapGraph implements Graph {
     private int kargerMinCut(CapGraph g) {
         int graph_size = g.getNodes().size();
         Set<Node> vertices;
-        Node node_u, node_v;
+        Node nodeU, nodeV;
         List<Node> neighbors;
         int cuts = 0;
 
@@ -296,29 +296,29 @@ public class CapGraph implements Graph {
             }
 
             // get a random edge and add contracted node_u to node_v karger list
-            node_u = getRandomChoice(vertices);
-            node_v = getRandomChoice(node_u.getNeighbors());
+            nodeU = getRandomChoice(vertices);
+            nodeV = getRandomChoice(nodeU.getNeighbors());
 
             // get all outgoing edges
-            neighbors = node_u.getNeighbors();
+            neighbors = nodeU.getNeighbors();
             for (Node n : neighbors) {
 
                 // if the nodes are the same skip
-                if (n.getSelf() != node_u.getSelf() && n.getSelf() != node_v.getSelf())
-                    node_v.addNeighbor(n);
+                if (n.getSelf() != nodeU.getSelf() && n.getSelf() != nodeV.getSelf())
+                    nodeV.addNeighbor(n);
             }
 
             // grab all incoming edges
-            neighbors = node_u.getRevNeighbors();
+            neighbors = nodeU.getRevNeighbors();
             for (Node n : neighbors) {
 
                 // if nodes are the same then skip
-                if (n.getSelf() != node_u.getSelf() && n.getSelf() != node_v.getSelf())
-                    n.addNeighbor(node_v);
+                if (n.getSelf() != nodeU.getSelf() && n.getSelf() != nodeV.getSelf())
+                    n.addNeighbor(nodeV);
             }
 
             // remove node from graph and get new graph size
-            g.removeNode(node_u);
+            g.removeNode(nodeU);
             graph_size = g.getNodes().size();
         }
 

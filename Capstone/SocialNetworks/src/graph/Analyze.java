@@ -1,9 +1,7 @@
 package graph;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class used for running main analysis on the CapGraph
@@ -11,8 +9,49 @@ import java.util.Set;
  */
 public class Analyze {
 
-    public void run() {
+    public static void main(String[] args) {
+        List<String> files = getFilenames();
+        CapGraph graph;
+        Double ratio;
+        Graph egonet;
+        List<Graph> egonets;
+        int maxEgonet = 0;
+        int sumEgonet = 0
+        List<Graph> sccs;
+        int minCuts, currentEgonet;
 
+        for (String file : files) {
+            graph = loadGraph(file);
+
+            if (graph == null)
+                continue;
+            System.out.println("Beginning graph " + file + " analysis");
+
+            ratio = graph.getEdgeNodeRatio();
+            System.out.println("Ratio: " + ratio);
+
+            // get the egonet for each vertex
+            for (Integer vertex : graph.getNodes().keySet()) {
+                egonet = graph.getEgonet(vertex);
+                currentEgonet = egonet.exportGraph().size()
+
+                if (maxEgonet < )
+                    maxEgonet = egonet
+            }
+            System.out.println("Average egonet: ");
+            System.out.println("Largest egonet: ");
+
+            // get all scc's for the graph
+            sccs = graph.getSCCs();
+            for (Graph scc : sccs) {
+
+            }
+
+            // calculate the min cuts
+            minCuts = graph.getMinCuts(graph.getNodes().size() / 4);
+
+            System.out.println("Graph " + file + " completed");
+        }
     }
 
     /**
@@ -20,7 +59,7 @@ public class Analyze {
      * @param filename - location of file to load
      * @return CapGraph
      */
-    public CapGraph loadGraph(String filename) {
+    public static CapGraph loadGraph(String filename) {
         Scanner sc;
         CapGraph graph = new CapGraph();
         int vertex1, vertex2;
@@ -54,9 +93,19 @@ public class Analyze {
         sc.close();
         return graph;
     }
+
+    /**
+     * Houses all files to load and utilize in analysis
+     * @return list of filenames
+     */
+    public static List<String> getFilenames() {
+        List<String> filenames = new ArrayList<>();
+        filenames.add("data/small_test_graph.txt");
+        filenames.add("data/facebook_1000.txt");
+        filenames.add("data/facebook_2000.txt");
+        filenames.add("data/facebook_udsc.txt");
+        filenames.add("data/twitter_higgs.txt");
+        filenames.add("data/twitter_combined.txt");
+        return filenames;
+    }
 }
-// version 2 - whole graph analysis
-// num edges / num vertices
-// average egonet size and largest
-// SCC - largest or average or both
-// number of cuts for min
