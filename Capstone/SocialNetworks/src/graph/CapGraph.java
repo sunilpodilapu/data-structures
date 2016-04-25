@@ -329,6 +329,10 @@ public class CapGraph implements Graph {
         for (Integer vertex : g.getNodes().keySet())
             cuts += g.getNodes().get(vertex).getNeighbors().size();
 
+        // if broke out of loop then not a fully connected graph
+        if (graph_size > 2)
+            cuts = 0;
+
         return cuts;
     }
 

@@ -24,6 +24,7 @@ public class Analyze {
                 if (graph == null)
                     continue;
                 System.out.println("Beginning graph " + file + " analysis");
+                System.out.println("Total nodes: " + graph.getNodes().size());
 
                 ratio = graph.getEdgeNodeRatio();
                 System.out.println("Ratio: " + ratio);
@@ -58,7 +59,8 @@ public class Analyze {
 
                     sum += current;
                 }
-                System.out.println("Average SCC: " + (double) sum / graph.getNodes().size());
+                System.out.println("Total SCC's: " + sccs.size());
+                System.out.println("Average SCC: " + (double) sum / sccs.size());
                 System.out.println("Largest SCC: " + max);
 
                 // calculate the min cuts
@@ -125,9 +127,9 @@ public class Analyze {
         filenames.add("data/small_test_graph.txt");
         filenames.add("data/facebook_1000.txt");
         filenames.add("data/facebook_2000.txt");
-        filenames.add("data/facebook_udsc.txt");
-        filenames.add("data/twitter_higgs.txt");
-        filenames.add("data/twitter_combined.txt");
+        //filenames.add("data/facebook_ucsd.txt");
+        //filenames.add("data/twitter_combined.txt");
+        //filenames.add("data/twitter_higgs.txt");
         return filenames;
     }
 }
