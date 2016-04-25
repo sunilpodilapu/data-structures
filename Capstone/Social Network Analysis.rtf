@@ -1,0 +1,64 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf460
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red38\green38\blue38;}
+\margl1440\margr1440\vieww15920\viewh19100\viewkind0
+\deftab720
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\partightenfactor0
+
+\fs60 \cf2 Overview
+\fs72 \
+
+\fs28 The goal of my capstone project is review the relationship between graph density, SCC\'92s, Egonets and minimum cuts.  It shifted from individual node comparison to overall graph comparison due to some of the feedback I received from Assignment 2.\
+
+\fs40 \
+Data
+\fs60 \
+
+\fs28 The dataset used will be the one that was provided by the course instructors in the Week 1 assignment.\'a0 Unfortunately, I am not member of any social networks so this will have suffice.  I was unable to fully use all provided data sets due to my implementations of Kosoraju\'92s algorithm and Karger\'92s algorithm the larger graphs had inconsistent issues.\
+
+\fs60 \
+
+\fs40 Questions
+\fs60 \
+
+\fs28 There is one main question I am trying to address with this analysis and that is the relationship between the various algorithmic findings and the graphs themselves.  From that overarching goal I hope to answer a few questions.\
+\
+How do SCC\'92s, egonets, and min cuts tie together?  If the graph is fully connected then a large number of SCC\'92s should be a good indicator of a relatively low (by comparison) number of min cuts and vice versa.  Is this truly the case though? And is that comparison necessary to tell if a graph will have a large number of SCC\'92s and average large egonets or is a high edge / node ratio a better indicator?  With both of those questions and their respective necessary calculations I hope to see what sort analysis can be completed.\
+
+\fs60 \
+
+\fs40 Algorithms, Data Structures, and Questions Answered\
+
+\fs28 I will start with I definitely noticed both the implementations of getSCCs and getMinCuts weren\'92t always able to complete within the Java Virtual Machine, especially in the graphs with over 2,000 nodes.  Both algorithms encountered numerous (and inconsistent) StackOverFlow problems.  However I was able to complete certain tests correctly and since I am not an expert on optimizing Java memory yet I was not able to always complete the analysis of those two algorithms with all the data sets.\
+\
+The first question I wanted to focus on was the ratio of edges to total number of nodes and finding that was my first task.   My hope was that this ratio would be a good indicator of the number of SCC\'92s one could expect from a given data set.  It appears the lower the ratio (below .2 given the findings in the data) there is a much higher chance of more than 1 strongly connected component.\
+\
+The second question and algorithm was the number of min cuts and how it will indicate a graph\'92s number of strongly connected components.  My findings here were even more surprising.  The number of minimum cuts doesn\'92t seem to correspond at all to number of strongly connected components.  A surprisingly low number could still be associated with a very large potential SCC.  And when there was a few SCC\'92s or a non-completely connected graph the number of min cuts drops to either undefined or obviously 0.  I could have foreseen that finding before beginning the analysis if you think about how min cuts operate.  \
+\
+Egonets also seem to vary drastically in size and relation to SCC\'92s, min cuts and ratio of edges to nodes.   Graphs are obviously a very complex structure to truly understand how all of these pieces tie together and what they mean.  All of these questions are attempted to be answered when running the Analyze class in the program attached.  \
+
+\fs40 \
+Algorithm Analysis
+\fs60 \
+
+\fs28 The analysis of the algorithms is relatively similar to what was found in the initial project proposal.  Even though I made some tweaks both to the implementation of Karger\'92s min cut and the easier question algorithm I answered (number of edges over nodes), the running time analysis are very similar.\
+\
+Calculations of number of total edges over total nods is a relatively low cost one.\'a0 This was a linear time calculation O (e + v) which is the total number of edges plus the total number of nodes.\
+\
+The complexity of Karger\'92s Min Cut really varies on how its implemented and the number of trials needed to compute the calculation.  I ended up using 1/4 the number of nodes to complete the calculation which indicates there is at last a linear time scale there.  However factor in a single pass which is closer to the scale of quadratic then this problem begins to approach exponential in complexity.  Some of the larger graph data sets also had an issue with being not fully connected graphs which means there is no min cut (or its at least 0, as indicated by the solution I end up giving).\
+
+\fs40 \
+Correctness Verification\
+
+\fs28 I used a couple different techniques to verify correctness of the algorithms I implemented.  Since I completely reworked my implementation of the CapGraph and added the Node class I had to ensure I didn't ruin the integrity of the egonet and SCC algorithms.  Both of these algorithms require an overhaul due to the design changes and I ensured both still performed accurately by not only using the graders given but also implementing JUnit testing.  The JUnit tests sample graphs I used were those similar to the lectures that detailed how the graphs should operate.\
+\
+For the new algorithms, edge / vertex ratio and Karger min cut there obviously was not a grader available and therefore required a more thorough knowledge of what the results should be from sample graphs.  The ratio algorithm is straightforward enough however Karger min cut was much more challenging and required a great deal of additional research into how it operated on directional unweighted graphs.  After getting what I believed was a good understanding I implemented it and JUnit testing with a graph I was able to find the result for as well as tested it on the course lecture graph for what I believed my understanding for the result to be.  Both obviously successfully passed the implementation.\
+
+\fs40 \
+Reflection\
+
+\fs28 My focus definitely changed as the project progressed.  I took note of some of the feedback I received on my original project proposal and realized there was some very valid points made, especially as I began implementation of the Karger min cut algorithm.  Those revelations along with the feedback received dictated the direction I took the project with (overall graph analysis vs individual node analysis).  I think this course has provided a great insight into the challenges you can encounter when you actually get into the programming and see how things work together.}
