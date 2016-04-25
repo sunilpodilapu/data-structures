@@ -14,43 +14,65 @@ public class Analyze {
         CapGraph graph;
         Double ratio;
         Graph egonet;
-        List<Graph> egonets;
-        int maxEgonet = 0;
-        int sumEgonet = 0
         List<Graph> sccs;
-        int minCuts, currentEgonet;
+        int minCuts, current;
 
         for (String file : files) {
-            graph = loadGraph(file);
+            try {
+                graph = loadGraph(file);
 
-            if (graph == null)
-                continue;
-            System.out.println("Beginning graph " + file + " analysis");
+                if (graph == null)
+                    continue;
+                System.out.println("Beginning graph " + file + " analysis");
 
-            ratio = graph.getEdgeNodeRatio();
-            System.out.println("Ratio: " + ratio);
+                ratio = graph.getEdgeNodeRatio();
+                System.out.println("Ratio: " + ratio);
 
-            // get the egonet for each vertex
-            for (Integer vertex : graph.getNodes().keySet()) {
-                egonet = graph.getEgonet(vertex);
-                currentEgonet = egonet.exportGraph().size()
+                // get the egonet for each vertex
+                int max = 0, sum = 0;
+                for (Integer vertex : graph.getNodes().keySet()) {
+                    egonet = graph.getEgonet(vertex);
+                    current = egonet.exportGraph().size();
 
-                if (maxEgonet < )
-                    maxEgonet = egonet
+                    // track max and running total
+                    if (max < current)
+                        max = current;
+
+                    sum += current;
+                }
+                System.out.println("Average egonet: " + (double) sum / graph.getNodes().size());
+                System.out.println("Largest egonet: " + max);
+
+                // reset variables
+                max = 0;
+                sum = 0;
+
+                // get all scc's for the graph
+                sccs = graph.getSCCs();
+                for (Graph scc : sccs) {
+                    current = scc.exportGraph().size();
+
+                    // track max and running total
+                    if (max < current)
+                        max = current;
+
+                    sum += current;
+                }
+                System.out.println("Average SCC: " + (double) sum / graph.getNodes().size());
+                System.out.println("Largest SCC: " + max);
+
+                // calculate the min cuts
+                minCuts = graph.getMinCuts(graph.getNodes().size() / 4);
+                System.out.println("Min cuts: " + minCuts);
+
+                System.out.println("Graph " + file + " completed\n");
             }
-            System.out.println("Average egonet: ");
-            System.out.println("Largest egonet: ");
 
-            // get all scc's for the graph
-            sccs = graph.getSCCs();
-            for (Graph scc : sccs) {
-
+            // if any exceptions encountered during processing graph continue
+            // processing rest of graphs
+            catch(Exception e) {
+               System.err.println(e.getMessage());
             }
-
-            // calculate the min cuts
-            minCuts = graph.getMinCuts(graph.getNodes().size() / 4);
-
-            System.out.println("Graph " + file + " completed");
         }
     }
 

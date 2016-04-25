@@ -295,6 +295,9 @@ public class CapGraph implements Graph {
                     vertices.add(g.getNodes().get(vertex));
             }
 
+            if (vertices.size() < 1)
+                break;
+
             // get a random edge and add contracted node_u to node_v karger list
             nodeU = getRandomChoice(vertices);
             nodeV = getRandomChoice(nodeU.getNeighbors());
