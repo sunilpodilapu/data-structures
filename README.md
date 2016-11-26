@@ -1,25 +1,19 @@
 # Object Oriented Design of Data Structures
+
 #### University of San Diego (Coursera)
 
 Specialization that covers intermediate topics in software development using
-the Java programming language and various data structures.
+the Java programming language and various data structures and techniques.
 
 ## Included
-- Object Oriented Programming in Java - UCSDUnfoldingMaps (Applet)
-- Data Structures: Measuring and Optimizing Performance - MOOCTextEditor
-(text editor app)
+
+- Object Oriented Programming in Java - Maps Applet
+- Data Structures: Measuring and Optimizing Performance - TextEditor
 - UCSDGraphs: Advanced Data Structures - JavaFX application
 - Capstone: Social Network Analysis
 
-## History
- - Initial commit containing coursework from first class and most of second
- course
- - Completed second course text editor project with spellchecking and
- auto-complete suggestions
- - Completed third course JavaFX application showcasing various graph traversal algorithms
- - Completed capstone course
-
 ## Credits
+
 - UC San Diego - MOOC staff
 - Coursera
 - Mark Hess
