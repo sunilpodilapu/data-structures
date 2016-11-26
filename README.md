@@ -1,9 +1,8 @@
-# Object Oriented Design of Data Structures
+# Data Structures
 
 #### University of San Diego (Coursera)
 
-Specialization that covers intermediate topics in software development using
-the Java programming language and various data structures and techniques.
+Object Oriented Design of Data Structures specialization that covers intermediate topics in software development using the Java programming language and various data structures and techniques.
 
 ## Included
 
